@@ -38,6 +38,11 @@ docker-compose exec mysql mysql -pmagento -A magento
 docker-compose exec cli php htdocs/shell/indexer.php --reindex elasticommerce
 ```
 
+### how to run unit tests
+```bash
+bin/phpunit -c src/elasticommerce-base/phpunit.xml --testsuite=unit
+```
+
 ### tools / access
 [Frontend](https://www.elasticommerce.dev/)
 
