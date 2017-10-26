@@ -1,0 +1,94 @@
+version: "3.0"
+
+services:
+  nginx:
+    build: ./docker/build/nginx/
+    links:
+      - fpm
+    volumes:
+      - ./:/var/www/www.elasticommerce.dev/:cached
+    ports:
+      - "443:443"
+      - "80:80"
+    tty: true
+    stdin_open: true
+    depends_on:
+      - fpm
+  fpm:
+    build: ./docker/build/php-fpm/
+    links:
+      - session
+      - cache
+      - mysql
+      - elasticsearch
+    volumes:
+      - ./:/var/www/www.elasticommerce.dev/:cached
+    ports:
+      - "9000"
+    depends_on:
+      - mysql
+      - cache
+      - session
+      - elasticsearch
+    working_dir: /var/www/www.elasticommerce.dev/
+    environment:
+      PHP_IDE_CONFIG: "serverName=www.elasticommerce.dev"
+  cli:
+    build: ./docker/build/php-cli/
+    links:
+      - session
+      - cache
+      - mysql
+      - elasticsearch
+    volumes:
+      - ./:/var/www/www.elasticommerce.dev/:cached
+    tty: true
+    stdin_open: true
+    restart: "no"
+    healthcheck:
+      disable: true
+    depends_on:
+      - mysql
+      - cache
+    environment:
+      PHP_IDE_CONFIG: "serverName=www.elasticommerce.dev"
+    working_dir: /var/www/www.elasticommerce.dev/
+  mysql:
+    build: ./docker/build/mysql/
+    volumes:
+      - ./docker/dumps:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    tty: true
+    stdin_open: true
+    environment:
+      MYSQL_DATABASE: magento
+      MYSQL_PASSWORD: magento
+      MYSQL_ROOT_PASSWORD: magento
+      MYSQL_USER: magento
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "127.0.0.1", "-u", "root", "-pmagento"]
+  session:
+    build: ./docker/build/session/
+    command: ["redis-server", "/etc/redis.conf"]
+    tty: true
+    stdin_open: true
+  cache:
+    build: ./docker/build/cache/
+    command: ["redis-server", "/etc/redis.conf"]
+    tty: true
+    stdin_open: true
+  elasticsearch:
+    build: ./docker/build/elasticsearch/
+    ports:
+      - "9200:9200"
+    tty: true
+    stdin_open: true
+  cerebro:
+    build: ./docker/build/cerebro/
+    ports:
+      - "9201:9201"
+    tty: true
+    stdin_open: true
+    depends_on:
+      - elasticsearch

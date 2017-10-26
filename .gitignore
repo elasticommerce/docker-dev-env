@@ -1,0 +1,8 @@
+.DS_Store
+.idea
+htdocs
+vendor
+bin
+!.modman/.basedir
+.modman
+*.sql.gz

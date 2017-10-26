@@ -1,0 +1,70 @@
+#!/bin/bash
+
+set -x
+
+DBHOST="mysql"
+DBUSER="magento"
+DBPASS="magento"
+DBNAME="magento"
+DOMAIN="https://www.elasticommerce.dev/"
+
+#// Detect magento installation dir
+#ROOTDIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
+ROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#// detect php cli interpreter
+PHPCLI="$(which php)"
+MAGERUN="$(which magerun)"
+
+#// delete cache
+rm -rf ${ROOTDIR}/htdocs/var/cache/mage--*
+rm -rf ${ROOTDIR}/htdocs/var/package
+
+#copy sample local.xml
+cp ${ROOTDIR}/local.xml.docker ${ROOTDIR}/htdocs/app/etc/local.xml
+
+#// drop database
+${MAGERUN} -n -q --skip-root-check --root-dir=${ROOTDIR}/htdocs/ db:drop
+${MAGERUN} -n -q --skip-root-check --root-dir=${ROOTDIR}/htdocs/ db:create
+${MAGERUN} -n -q --skip-root-check --root-dir=${ROOTDIR}/htdocs/ cache:flush
+if [ -d "${ROOTDIR}/sample-data/" ]
+then
+	mysql -h ${DBHOST} -u ${DBUSER} -p${DBPASS} ${DBNAME} < ${ROOTDIR}/sample-data/magento-lts-sample-data.sql
+	cp -R ${ROOTDIR}/sample-data/media ${ROOTDIR}/htdocs/
+    cp -R ${ROOTDIR}/sample-data/skin ${ROOTDIR}/htdocs/
+fi
+#// delete local xml
+rm -rf ${ROOTDIR}/htdocs/app/etc/local.xml
+
+#// install magento
+${PHPCLI} ${ROOTDIR}/htdocs/install.php -- \
+    --license_agreement_accepted "yes" \
+    --locale "en_US" \
+    --timezone "Europe/Berlin" \
+    --db_host "${DBHOST}" \
+    --db_name "${DBNAME}" \
+    --db_user "${DBUSER}" \
+    --db_pass "${DBPASS}" \
+    --url "${DOMAIN}" \
+    --use_rewrites "yes" \
+    --use_secure "no" \
+    --secure_base_url "" \
+    --use_secure_admin "no" \
+    --admin_username "admin" \
+    --admin_lastname "Doe" \
+    --admin_firstname "John" \
+    --admin_email "john.doe@example.com" \
+    --admin_password "password123" \
+    --admin_frontname "admin" \
+    --backend_frontname "admin" \
+    --default_currency "EUR" \
+    --skip_url_validation "yes" \
+    --session_save db
+
+#copy sample local.xml
+cp ${ROOTDIR}/local.xml.docker ${ROOTDIR}/htdocs/app/etc/local.xml
+#// delete cache
+rm -rf ${ROOTDIR}/htdocs/var/cache/mage--*
+${PHPCLI} ${ROOTDIR}/htdocs/shell/migration.php
+#// run indexer
+${PHPCLI} ${ROOTDIR}/htdocs/shell/indexer.php --reindexall
+${MAGERUN} -n -q --skip-root-check --root-dir=${ROOTDIR}/htdocs/ cache:enable

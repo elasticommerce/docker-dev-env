@@ -1,0 +1,40 @@
+{
+  "name": "smartdevs/elasticommerce-vagrant",
+  "description": "Smart-Devs Elasticommerce development environment",
+  "type": "project",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://magento-lts.repositories.smart-devs.net/"
+    },
+    {
+      "type": "composer",
+      "url": "https://packages.firegento.com"
+    },
+    {
+      "type": "path",
+      "url": ".modman/*/"
+    }
+  ],
+  "require": {
+    "smartdevs/magento-lts-core": "dev-master",
+    "smart-devs/elasticommerce-magento": "*",
+    "smart-devs/elasticommerce-base": "*",
+    "smart-devs/util": "*",
+    "psr/log": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.5"
+  },
+  "config": {
+    "bin-dir": "bin",
+    "use-include-path": true,
+    "secure-http": false
+  },
+  "extra": {
+    "skip-suggest-repositories": true,
+    "magento-root-dir": "htdocs",
+    "magento-force": true,
+    "magento-deploystrategy": "symlink"
+  }
+}
