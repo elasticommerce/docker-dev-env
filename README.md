@@ -45,7 +45,7 @@ docker-compose exec cli php htdocs/shell/indexer.php --reindex elasticommerce
 [Backend](https://www.elasticommerce.dev/index.php/admin/) (admin -> password123)
 
 
-[Elasticsearch](http://localhost:9200//)
+[Elasticsearch](http://localhost:9200/)
 
 
 [Elasticsearch Management](http://localhost:9201/)
