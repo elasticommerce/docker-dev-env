@@ -12,21 +12,30 @@ Please watch and wait until the database container is finished importing the dum
 ```bash
 docker-compose exec cli ./install
 ```
+### howto run the update scripts manually
 ```bash
-watch -n 2 -x docker-compose exec mysql mysql -u root -pmagento -e "show processlist"
+docker-compose exec cli php htdocs/shell/migration.php
 ```
+### howto flush redis cache
+```bash
+docker-compose exec cache redis-cli FLUSHALL
 ```
-/usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/010-db-schema.sql.gz
-/usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/020-db-data.sql.gz
-/usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/999-db_anonimizer.sql
-MySQL init process done. Ready for start up.
-2017-10-26  9:06:49 140088460658624 [Note] mysqld (mysqld 10.1.19-MariaDB-1~jessie) starting as process 1 ...
+### howto access database
+```bash
+docker-compose exec mysql mysql -pmagento -A magento
 ```
+### howto run the elasticommerce indexer
+```bash
+docker-compose exec cli php htdocs/shell/indexer.php --reindex elasticommerce
+```
+### tools / access
+[Frontend](https://www.elasticommerce.dev/)
 
 
-### usefull commands 
-docker-compose exec cli php magento/shell/Update.php
-docker-compose exec nodejs node_modules/.bin/grunt build --force
+[Backend](https://www.elasticommerce.dev/index.php/admin/) (admin -> password123)
 
 
-http://localhost:9201/#/overview?host=http:%2F%2Felasticsearch:9200
+[Elasticsearch](http://localhost:9200//)
+
+
+[Elasticsearch Management](http://localhost:9201/#/overview?host=http:%2F%2Felasticsearch:9200)
