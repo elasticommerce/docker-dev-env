@@ -88,7 +88,12 @@ services:
     build: ./docker/build/cerebro/
     ports:
       - "9201:9201"
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     tty: true
     stdin_open: true
+    links:
+      - elasticsearch
     depends_on:
       - elasticsearch

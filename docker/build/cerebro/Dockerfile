@@ -16,6 +16,8 @@ RUN cd /opt/ \
     && mkdir cerebro-${CEREBRO_VERSION}/logs \
     && mv cerebro-${CEREBRO_VERSION} cerebro
 
+COPY "config/application.conf" "/opt/cerebro/conf/application.conf"
+
 WORKDIR /opt/cerebro
 EXPOSE 9201
-CMD ["./bin/cerebro", "-Dhttp.port=9201", "-Dhttp.address=0.0.0.0"]
+CMD ["./bin/cerebro", "-Dhttp.port=9201"]
