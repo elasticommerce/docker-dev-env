@@ -2,6 +2,10 @@
  - install docker
  - install docker-compose
 
+### set up the repos
+git clone git@bitbucket.org:elasticommerce/elasticommerce-base.git .modman/elasticommerce-base
+git clone git@bitbucket.org:elasticommerce/elasticommerce-magento.git .modman/elasticommerce-magento
+
 ### howto start the environment
 ```bash
 docker-compose up -d
