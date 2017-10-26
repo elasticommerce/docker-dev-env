@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a75f6c947b156970c0e6a272c558982a",
+    "content-hash": "43c91595aef141201a3fe495ca88a74b",
     "packages": [
         {
             "name": "aydin-hassan/magento-core-composer-installer",
@@ -571,7 +571,7 @@
             "version": "1.0.0",
             "dist": {
                 "type": "path",
-                "url": ".modman/elasticommerce-base",
+                "url": "src/elasticommerce-base",
                 "reference": "b439ede3c63c70fb0450df8713a143eb32f9ac7d",
                 "shasum": null
             },
