@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 DBHOST="mysql"
 DBUSER="magento"
 DBPASS="magento"
@@ -14,21 +12,20 @@ ROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #// detect php cli interpreter
 PHPCLI="$(which php)"
 MAGERUN="$(which magerun)"
-
+MYSQL="$(which mysql)"
 #// delete cache
 rm -rf ${ROOTDIR}/htdocs/var/cache/mage--*
 rm -rf ${ROOTDIR}/htdocs/var/package
 
 #copy sample local.xml
-cp ${ROOTDIR}/local.xml.docker ${ROOTDIR}/htdocs/app/etc/local.xml
+cp ${ROOTDIR}/docker/shared/local.xml.docker ${ROOTDIR}/htdocs/app/etc/local.xml
 
 #// drop database
-${MAGERUN} -n -q --skip-root-check --root-dir=${ROOTDIR}/htdocs/ db:drop
-${MAGERUN} -n -q --skip-root-check --root-dir=${ROOTDIR}/htdocs/ db:create
+${MYSQL} -h ${DBHOST} -u ${DBUSER} -p${DBPASS} -e "DROP DATABASE ${DBNAME}; CREATE DATABASE ${DBNAME}"
 ${MAGERUN} -n -q --skip-root-check --root-dir=${ROOTDIR}/htdocs/ cache:flush
 if [ -d "${ROOTDIR}/sample-data/" ]
 then
-	mysql -h ${DBHOST} -u ${DBUSER} -p${DBPASS} ${DBNAME} < ${ROOTDIR}/sample-data/magento-lts-sample-data.sql
+	${MYSQL} -h ${DBHOST} -u ${DBUSER} -p${DBPASS} ${DBNAME} < ${ROOTDIR}/sample-data/magento-lts-sample-data.sql
 	cp -R ${ROOTDIR}/sample-data/media ${ROOTDIR}/htdocs/
     cp -R ${ROOTDIR}/sample-data/skin ${ROOTDIR}/htdocs/
 fi
@@ -61,7 +58,7 @@ ${PHPCLI} ${ROOTDIR}/htdocs/install.php -- \
     --session_save db
 
 #copy sample local.xml
-cp ${ROOTDIR}/local.xml.docker ${ROOTDIR}/htdocs/app/etc/local.xml
+cp ${ROOTDIR}/docker/shared/local.xml.docker ${ROOTDIR}/htdocs/app/etc/local.xml
 #// delete cache
 rm -rf ${ROOTDIR}/htdocs/var/cache/mage--*
 ${PHPCLI} ${ROOTDIR}/htdocs/shell/migration.php

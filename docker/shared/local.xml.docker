@@ -103,4 +103,14 @@
             </adminhtml>
         </routers>
     </admin>
+    <default>
+        <elasticommerce>
+            <connection>
+                <host><![CDATA[elasticsearch]]></host>
+                <port><![CDATA[9200]]></port>
+                <auth_username/>
+                <auth_password/>
+            </connection>
+        </elasticommerce>
+    </default>
 </config>
