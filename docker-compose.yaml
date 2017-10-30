@@ -23,8 +23,6 @@ services:
       - elasticsearch
     volumes:
       - ./:/var/www/www.elasticommerce.dev/:cached
-    ports:
-      - "9000"
     depends_on:
       - mysql
       - cache
@@ -42,6 +40,7 @@ services:
       - elasticsearch
     volumes:
       - ./:/var/www/www.elasticommerce.dev/:cached
+      - ./.modman/elasticommerce-magento/src/app/code/Community/SmartDevs/ElastiCommerce:/var/www/www.elasticommerce.dev/htdocs/app/code/community/SmartDevs/ElastiCommerce:cached
     tty: true
     stdin_open: true
     restart: "no"
