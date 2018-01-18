@@ -4,7 +4,7 @@
 
 ### set up the repos
 ```bash
-git clone git@bitbucket.org:elasticommerce/elasticommerce-base.git .src/elasticommerce-base
+git clone git@bitbucket.org:elasticommerce/elasticommerce-base.git src/elasticommerce-base
 git clone git@bitbucket.org:elasticommerce/elasticommerce-magento.git .modman/elasticommerce-magento
 ```
 
