@@ -52,6 +52,13 @@ services:
     environment:
       PHP_IDE_CONFIG: "serverName=www.elasticommerce.dev"
     working_dir: /var/www/www.elasticommerce.dev/
+  blackfire:
+    image: blackfire/blackfire
+    environment:
+      - BLACKFIRE_CLIENT_ID=e8123dbf-6e4f-41ac-a978-3321309ec558
+      - BLACKFIRE_CLIENT_TOKEN=98eff8685cd9a7ef270f509be250ec98bf1227ea35bbff45a500f0318a08600e
+      - BLACKFIRE_SERVER_ID=bfa48de3-b114-4e87-aab6-6f74968dba0d
+      - BLACKFIRE_SERVER_TOKEN=be385a2ab7eddb4b5607c7480296e5c575c74378c37fc023eae067319050ad11
   mysql:
     build: ./docker/build/mysql/
     volumes:
